@@ -22,7 +22,7 @@ import net.minecraft.server.ServerTask;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -35,7 +35,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.gen.structure.Structure;
 import fi.dy.masa.malilib.network.ClientPacketChannelHandler;
 import fi.dy.masa.malilib.util.Constants;
 import fi.dy.masa.malilib.util.InfoUtils;
@@ -392,16 +392,16 @@ public class DataStorage
 
     public void onChatMessage(Text message)
     {
-        if (message instanceof TranslatableText)
+        if (message.getContent() instanceof TranslatableTextContent)
         {
-            TranslatableText text = (TranslatableText) message;
+            TranslatableTextContent text = (TranslatableTextContent)message.getContent();
 
             // The vanilla "/seed" command
             if ("commands.seed.success".equals(text.getKey()))
             {
                 try
                 {
-                    String str = text.getString();
+                    String str = message.getString();
                     int i1 = str.indexOf("[");
                     int i2 = str.indexOf("]");
 
@@ -592,7 +592,7 @@ public class DataStorage
         if (world != null)
         {
             MinecraftServer server = this.mc.getServer();
-            final int maxChunkRange = this.mc.options.viewDistance + 2;
+            final int maxChunkRange = this.mc.options.getViewDistance().getValue() + 2;
 
             server.send(new ServerTask(server.getTicks(), () ->
             {
@@ -678,7 +678,7 @@ public class DataStorage
 
         if (enabledTypes.isEmpty() == false)
         {
-            Registry<ConfiguredStructureFeature<?, ?>> registry = world.getRegistryManager().get(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY);
+            Registry<Structure> registry = world.getRegistryManager().get(Registry.STRUCTURE_KEY);
             int minCX = (playerPos.getX() >> 4) - maxChunkRange;
             int minCZ = (playerPos.getZ() >> 4) - maxChunkRange;
             int maxCX = (playerPos.getX() >> 4) + maxChunkRange;
@@ -695,7 +695,7 @@ public class DataStorage
                     {
                         for (StructureType type : enabledTypes)
                         {
-                            ConfiguredStructureFeature<?, ?> feature = registry.get(type.getFeatureId());
+                            Structure feature = registry.get(type.getFeatureId());
 
                             if (feature == null)
                             {

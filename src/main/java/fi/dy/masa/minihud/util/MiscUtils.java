@@ -13,7 +13,6 @@ import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
@@ -66,7 +65,7 @@ public class MiscUtils
 
     public static boolean isOverworld(World world)
     {
-        return world.getDimension().isNatural();
+        return world.getDimension().natural();
     }
 
     public static boolean isStructureWithinRange(@Nullable BlockBox bb, BlockPos playerPos, int maxRange)
@@ -115,15 +114,15 @@ public class MiscUtils
             {
                 AxolotlEntity.Variant variant = AxolotlEntity.Variant.VARIANTS[variantId];
                 String variantName = variant.getName();
-                TranslatableText labelText = new TranslatableText("minihud.label.axolotl_tooltip.label");
-                TranslatableText valueText = new TranslatableText("minihud.label.axolotl_tooltip.value", variantName, variantId);
+                Text labelText = Text.translatable("minihud.label.axolotl_tooltip.label");
+                Text valueText = Text.translatable("minihud.label.axolotl_tooltip.value", variantName, variantId);
 
                 if (variantId < AXOLOTL_COLORS.length)
                 {
-                    valueText.setStyle(Style.EMPTY.withColor(AXOLOTL_COLORS[variantId]));
+                    (valueText).copy().styled((style) -> Style.EMPTY.withColor(AXOLOTL_COLORS[variantId]));
                 }
 
-                lines.add(Math.min(1, lines.size()), labelText.append(valueText));
+                lines.add(Math.min(1, lines.size()), labelText.copy().append(valueText));
             }
         }
     }
@@ -147,7 +146,7 @@ public class MiscUtils
                 if (entityDataTag.contains("CustomName", Constants.NBT.TAG_STRING))
                 {
                     String beeName = entityDataTag.getString("CustomName");
-                    lines.add(Math.min(1, lines.size()), new TranslatableText("minihud.label.bee_tooltip.name", Text.Serializer.fromJson(beeName).getString()));
+                    lines.add(Math.min(1, lines.size()), Text.translatable("minihud.label.bee_tooltip.name", Text.Serializer.fromJson(beeName).getString()));
                 }
 
                 if (entityDataTag.contains("Age", Constants.NBT.TAG_INT) &&
@@ -157,15 +156,15 @@ public class MiscUtils
                 }
             }
 
-            TranslatableText text;
+            Text text;
 
             if (babyCount > 0)
             {
-                text = new TranslatableText("minihud.label.bee_tooltip.count_babies", String.valueOf(count), String.valueOf(babyCount));
+                text = Text.translatable("minihud.label.bee_tooltip.count_babies", String.valueOf(count), String.valueOf(babyCount));
             }
             else
             {
-                text = new TranslatableText("minihud.label.bee_tooltip.count", String.valueOf(count));
+                text = Text.translatable("minihud.label.bee_tooltip.count", String.valueOf(count));
             }
 
             lines.add(Math.min(1, lines.size()), text);
@@ -190,7 +189,7 @@ public class MiscUtils
                 honeyLevel = String.valueOf(tag.getInt("honey_level"));
             }
 
-            lines.add(Math.min(1, lines.size()), new TranslatableText("minihud.label.honey_info.level", honeyLevel));
+            lines.add(Math.min(1, lines.size()), Text.translatable("minihud.label.honey_info.level", honeyLevel));
         }
     }
 
