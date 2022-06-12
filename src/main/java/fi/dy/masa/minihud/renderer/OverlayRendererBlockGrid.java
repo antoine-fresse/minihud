@@ -61,7 +61,7 @@ public class OverlayRendererBlockGrid extends OverlayRendererBase
                 break;
         }
 
-        BUFFER_1.end();
+        //BUFFER_1.end();
         renderLines.uploadData(BUFFER_1);
     }
 

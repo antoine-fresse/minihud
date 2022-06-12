@@ -111,7 +111,7 @@ public class ShapeCircle extends ShapeCircleBase
                                                    this.color, expand, cameraPos, BUFFER_1);
         }
 
-        BUFFER_1.end();
+        //BUFFER_1.end();
         renderQuads.uploadData(BUFFER_1);
     }
 
